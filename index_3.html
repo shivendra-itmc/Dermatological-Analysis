@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Practice Valuation | ITMC SYSTEMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .step-hidden {
+            display: none;
+        }
+        
+        .tooltip-trigger:hover .tooltip-content {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tooltip-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0d9488;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .currency-input {
+            position: relative;
+        }
+        
+        .currency-input::before {
+            content: '€';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .currency-input input {
+            padding-left: 28px;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .progress-step.active .step-circle {
+            background: #0d9488;
+            color: white;
+        }
+        
+        .progress-step.completed .step-circle {
+            background: #10b981;
+            color: white;
+        }
+        
+        .progress-step .step-line {
+            background: #e5e7eb;
+        }
+        
+        .progress-step.completed .step-line {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-tooth text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">ITMC SYSTEMS</h1>
+                    <p class="text-xs text-gray-500">Dental Practice Valuation</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-2 text-sm text-gray-600">
+                <i class="fas fa-shield-halved text-teal-600"></i>
+                <span>100% Confidential & GDPR Compliant</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Progress Bar -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6" id="progressContainer">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-600">Step <span id="currentStepNum">1</span> of 6</span>
+                <span class="text-sm text-gray-500" id="progressPercent">17%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                <div class="bg-gradient-to-r from-teal-500 to-teal-600 h-2 rounded-full transition-all duration-500" id="progressBar" style="width: 17%"></div>
+            </div>
+            
+            <!-- Step Indicators -->
+            <div class="hidden md:flex justify-between relative">
+                <div class="progress-step active flex flex-col items-center" data-step="1">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">1</div>
+                    <span class="text-xs text-gray-600 text-center">Practice</span>
+                </div>
+                <div class="progress-step flex flex-col items-center" data-step="2">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">2</div>
+                    <span class="text-xs text-gray-600 text-center">Revenue</span>
+                </div>
+                <div class="progress-step flex flex-col items-center" data-step="3">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">3</div>
+                    <span class="text-xs text-gray-600 text-center">Team</span>
+                </div>
+                <div class="progress-step flex flex-col items-center" data-step="4">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">4</div>
+                    <span class="text-xs text-gray-600 text-center">Property</span>
+                </div>
+                <div class="progress-step flex flex-col items-center" data-step="5">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">5</div>
+                    <span class="text-xs text-gray-600 text-center">Extras</span>
+                </div>
+                <div class="progress-step flex flex-col items-center" data-step="6">
+                    <div class="step-circle w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold mb-2">6</div>
+                    <span class="text-xs text-gray-600 text-center">Contact</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <form id="valuationForm" class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <!-- Step 1: Practice Basics -->
+            <div class="form-step" data-step="1">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-clinic-medical text-teal-600 mr-2"></i>
+                        Practice Basics
+                    </h2>
+                    <p class="text-gray-600">Tell us about your dental practice</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Practice Name / Reference
+                            <span class="text-gray-400 font-normal">(optional)</span>
+                        </label>
+                        <input type="text" name="practiceName" placeholder="e.g., Downtown Dental Clinic" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of Locations <span class="text-red-500">*</span>
+                        </label>
+                        <select name="locations" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <option value="">Select...</option>
+                            <option value="1">1 location</option>
+                            <option value="2">2 locations</option>
+                            <option value="3">3+ locations</option>
+                        </select>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Postcode <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="postcode" required placeholder="1234 AB" maxlength="7"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                City <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="city" required placeholder="Amsterdam" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Year Established / Current Owner Started <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="yearStarted" required min="1950" max="2026" placeholder="2015"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Patients & Revenue -->
+            <div class="form-step step-hidden" data-step="2">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-users text-teal-600 mr-2"></i>
+                        Patients & Revenue
+                    </h2>
+                    <p class="text-gray-600">Information about your patient base and revenue</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of Registered Patients <span class="text-red-500">*</span>
+                        </label>
+                        <select name="registeredPatients" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <option value="">Select...</option>
+                            <option value="500">< 1,000</option>
+                            <option value="1500">1,000 - 2,000</option>
+                            <option value="2500">2,000 - 3,000</option>
+                            <option value="3500">3,000 - 4,000</option>
+                            <option value="5000">> 4,000</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of Active Patients per Year <span class="text-red-500">*</span>
+                        </label>
+                        <select name="activePatients" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <option value="">Select...</option>
+                            <option value="400">< 800</option>
+                            <option value="1200">800 - 1,600</option>
+                            <option value="2000">1,600 - 2,400</option>
+                            <option value="2800">2,400 - 3,200</option>
+                            <option value="4000">> 3,200</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 tooltip-trigger relative">
+                            Annual Turnover Last Fiscal Year <span class="text-red-500">*</span>
+                            <i class="fas fa-info-circle text-gray-400 ml-1 cursor-help"></i>
+                            <span class="tooltip-content absolute left-0 top-full mt-2 bg-gray-800 text-white text-xs rounded-lg p-3 w-64 z-10 shadow-lg">
+                                Excluding technician/lab costs: costs for crown & bridge work, outsourced lab work
+                            </span>
+                        </label>
+                        <div class="currency-input">
+                            <input type="text" name="annualTurnover" required placeholder="450,000" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                                oninput="formatCurrency(this)">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Excl. technician/lab costs</p>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            Revenue Split (total must equal 100%)
+                            <span class="ml-2 text-sm font-semibold" id="revenueTotal">0%</span>
+                        </label>
+                        
+                        <div class="space-y-4">
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">General Dentistry</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_general_val">60%</span>
+                                </div>
+                                <input type="range" name="rev_general" min="0" max="100" value="60" class="w-full" oninput="updateRevenueSlider(this, 'general')">
+                            </div>
+                            
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">Orthodontics</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_ortho_val">10%</span>
+                                </div>
+                                <input type="range" name="rev_ortho" min="0" max="100" value="10" class="w-full" oninput="updateRevenueSlider(this, 'ortho')">
+                            </div>
+                            
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">Implantology</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_implant_val">10%</span>
+                                </div>
+                                <input type="range" name="rev_implant" min="0" max="100" value="10" class="w-full" oninput="updateRevenueSlider(this, 'implant')">
+                            </div>
+                            
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">Periodontology</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_paro_val">10%</span>
+                                </div>
+                                <input type="range" name="rev_paro" min="0" max="100" value="10" class="w-full" oninput="updateRevenueSlider(this, 'paro')">
+                            </div>
+                            
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">Pediatric Dentistry</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_pediatric_val">5%</span>
+                                </div>
+                                <input type="range" name="rev_pediatric" min="0" max="100" value="5" class="w-full" oninput="updateRevenueSlider(this, 'pediatric')">
+                            </div>
+                            
+                            <div class="revenue-slider">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm text-gray-600">Other</span>
+                                    <span class="text-sm font-medium text-teal-600" id="rev_other_val">5%</span>
+                                </div>
+                                <input type="range" name="rev_other" min="0" max="100" value="5" class="w-full" oninput="updateRevenueSlider(this, 'other')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Facilities & Team -->
+            <div class="form-step step-hidden" data-step="3">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-user-doctor text-teal-600 mr-2"></i>
+                        Facilities & Team
+                    </h2>
+                    <p class="text-gray-600">Information about your practice and staff</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of Treatment Chairs <span class="text-red-500">*</span>
+                        </label>
+                        <select name="treatmentChairs" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <option value="">Select...</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10+</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            FTE Dentists (including owner) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <input type="number" name="fteDentists" required min="0.5" max="20" step="0.5" placeholder="2.0"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <span class="text-gray-500 whitespace-nowrap">FTE</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            FTE Assistants / Hygienists / Prevention Staff <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <input type="number" name="fteStaff" required min="0" max="50" step="0.5" placeholder="3.0"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                            <span class="text-gray-500 whitespace-nowrap">FTE</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-lightbulb text-blue-500 mt-1"></i>
+                            <p class="text-sm text-blue-800">
+                                <strong>Tip:</strong> A good ratio of treatment chairs to FTE dentists affects efficiency and therefore the value of your practice.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Property & Lease -->
+            <div class="form-step step-hidden" data-step="4">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-building text-teal-600 mr-2"></i>
+                        Property & Lease
+                    </h2>
+                    <p class="text-gray-600">Information about your practice location</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Property Status <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <label class="flex-1 relative cursor-pointer">
+                                <input type="radio" name="propertyStatus" value="rented" required class="sr-only peer" onchange="togglePropertyDetails(this.value)">
+                                <div class="border-2 border-gray-200 rounded-xl p-4 text-center peer-checked:border-teal-500 peer-checked:bg-teal-50 transition hover:border-gray-300">
+                                    <i class="fas fa-key text-2xl text-gray-400 mb-2 peer-checked:text-teal-600"></i>
+                                    <p class="font-medium text-gray-700">Rented</p>
+                                </div>
+                            </label>
+                            <label class="flex-1 relative cursor-pointer">
+                                <input type="radio" name="propertyStatus" value="owned" required class="sr-only peer" onchange="togglePropertyDetails(this.value)">
+                                <div class="border-2 border-gray-200 rounded-xl p-4 text-center peer-checked:border-teal-500 peer-checked:bg-teal-50 transition hover:border-gray-300">
+                                    <i class="fas fa-home text-2xl text-gray-400 mb-2 peer-checked:text-teal-600"></i>
+                                    <p class="font-medium text-gray-700">Owned</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="rentedDetails" class="hidden space-y-4 fade-in">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Monthly Rent excl. VAT/Service Costs
+                            </label>
+                            <div class="currency-input">
+                                <input type="text" name="monthlyRent" placeholder="2,500" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                                    oninput="formatCurrency(this)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Remaining Lease Term
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input type="number" name="leaseRemaining" min="0" max="30" placeholder="5"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                                <span class="text-gray-500 whitespace-nowrap">years</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ownedDetails" class="hidden space-y-4 fade-in">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Estimated Property Market Value
+                            </label>
+                            <div class="currency-input">
+                                <input type="text" name="propertyValue" placeholder="500,000" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                                    oninput="formatCurrency(this)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Remaining Mortgage Duration
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input type="number" name="mortgageRemaining" min="0" max="30" placeholder="15"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                                <span class="text-gray-500 whitespace-nowrap">years</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Specialties & Additional -->
+            <div class="form-step step-hidden" data-step="5">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-star text-teal-600 mr-2"></i>
+                        Specialties & Additional Factors
+                    </h2>
+                    <p class="text-gray-600">Additional factors that influence valuation</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Specialties (select multiple)
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="general" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">General Dentistry</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="orthodontics" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Orthodontics</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="implantology" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Implantology</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="periodontics" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Periodontology</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="endodontics" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Endodontics</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="pediatric" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Pediatric Dentistry</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="aesthetic" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                                <span class="text-sm text-gray-700">Aesthetic/Cosmetic</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="checkbox" name="specialties" value="other" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500" onchange="toggleOtherSpecialty(this)">
+                                <span class="text-sm text-gray-700">Other</span>
+                            </label>
+                        </div>
+                        <input type="text" name="otherSpecialty" id="otherSpecialtyInput" placeholder="Please specify..." 
+                            class="hidden mt-3 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Recent Major Equipment Investments?
+                        </label>
+                        <div class="flex gap-4 mb-3">
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="recentInvestments" value="yes" class="w-5 h-5 text-teal-600 focus:ring-teal-500" onchange="toggleInvestmentDetails(true)">
+                                <span class="text-gray-700">Yes</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="recentInvestments" value="no" class="w-5 h-5 text-teal-600 focus:ring-teal-500" onchange="toggleInvestmentDetails(false)">
+                                <span class="text-gray-700">No</span>
+                            </label>
+                        </div>
+                        <div id="investmentDetails" class="hidden grid md:grid-cols-2 gap-4 fade-in">
+                            <div class="currency-input">
+                                <input type="text" name="investmentAmount" placeholder="75,000" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                                    oninput="formatCurrency(this)">
+                                <p class="text-xs text-gray-500 mt-1">Investment amount</p>
+                            </div>
+                            <div>
+                                <input type="text" name="investmentDescription" placeholder="e.g., CBCT, CEREC" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                                <p class="text-xs text-gray-500 mt-1">Investment description</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Chain Affiliation or Major Contracts?
+                        </label>
+                        <div class="flex gap-4 mb-3">
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="chainAffiliation" value="yes" class="w-5 h-5 text-teal-600 focus:ring-teal-500" onchange="toggleChainDetails(true)">
+                                <span class="text-gray-700">Yes</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="chainAffiliation" value="no" class="w-5 h-5 text-teal-600 focus:ring-teal-500" onchange="toggleChainDetails(false)">
+                                <span class="text-gray-700">No</span>
+                            </label>
+                        </div>
+                        <div id="chainDetails" class="hidden fade-in">
+                            <input type="text" name="chainDescription" placeholder="e.g., Partnership with..." 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Contact -->
+            <div class="form-step step-hidden" data-step="6">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        <i class="fas fa-envelope text-teal-600 mr-2"></i>
+                        Contact Details
+                    </h2>
+                    <p class="text-gray-600">Almost done! Where should we send your valuation?</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="contactName" required placeholder="John Smith" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="contactEmail" required placeholder="john@dentalclinic.com" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number <span class="text-gray-400 font-normal">(optional)</span>
+                        </label>
+                        <input type="tel" name="contactPhone" placeholder="+31 6 12345678" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Would you like a free follow-up call with our valuation expert?
+                        </label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="followUpCall" value="yes" class="w-5 h-5 text-teal-600 focus:ring-teal-500">
+                                <span class="text-gray-700">Yes, please</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="followUpCall" value="no" class="w-5 h-5 text-teal-600 focus:ring-teal-500" checked>
+                                <span class="text-gray-700">No, thanks</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" name="privacyConsent" required class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500 mt-0.5">
+                            <span class="text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-teal-600 underline hover:text-teal-700">privacy policy</a> and understand that my data will be used for the valuation. <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- reCAPTCHA placeholder -->
+                    <div class="bg-gray-100 border border-gray-300 rounded-lg p-4 flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+                            <i class="fas fa-robot text-gray-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">reCAPTCHA verification</p>
+                            <p class="text-xs text-gray-400">Protected against spam</p>
+                        </div>
+                        <label class="ml-auto flex items-center gap-2">
+                            <input type="checkbox" id="captchaCheck" class="w-5 h-5 text-teal-600 rounded focus:ring-teal-500">
+                            <span class="text-sm text-gray-600">I'm not a robot</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+                <button type="button" id="prevBtn" onclick="changeStep(-1)" 
+                    class="hidden px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i>
+                    Previous
+                </button>
+                
+                <button type="button" id="saveBtn" onclick="saveProgress()" 
+                    class="text-sm text-gray-500 hover:text-teal-600 transition flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Save & Continue Later
+                </button>
+                
+                <button type="button" id="nextBtn" onclick="changeStep(1)" 
+                    class="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition flex items-center gap-2 ml-auto">
+                    Next
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                
+                <button type="submit" id="submitBtn" 
+                    class="hidden px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg hover:from-teal-700 hover:to-teal-800 transition flex items-center gap-2 font-medium shadow-lg">
+                    <i class="fas fa-calculator"></i>
+                    Calculate Indicative Value
+                </button>
+            </div>
+        </form>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden bg-white rounded-2xl shadow-lg p-12 text-center">
+            <div class="w-20 h-20 border-4 border-teal-200 border-t-teal-600 rounded-full loading-spinner mx-auto mb-6"></div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Please wait...</h3>
+            <p class="text-gray-600">We're calculating the indicative value of your practice</p>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsSection" class="hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6 fade-in">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-3xl text-green-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Your Indicative Valuation</h2>
+                    <p class="text-gray-600">Based on the information you provided</p>
+                </div>
+
+                <div class="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-6 md:p-8 text-white text-center mb-8">
+                    <p class="text-teal-100 text-sm uppercase tracking-wide mb-2">Estimated Practice Value</p>
+                    <p class="text-4xl md:text-5xl font-bold mb-2" id="valuationResult">€400,000 – €600,000</p>
+                    <p class="text-teal-100 text-sm">Excluding any real estate</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-50 rounded-xl p-4 text-center">
+                        <i class="fas fa-users text-teal-600 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">Patients</p>
+                        <p class="font-semibold text-gray-800" id="summaryPatients">3,000+</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4 text-center">
+                        <i class="fas fa-chair text-teal-600 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">Chairs</p>
+                        <p class="font-semibold text-gray-800" id="summaryChairs">3</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4 text-center">
+                        <i class="fas fa-euro-sign text-teal-600 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">Annual Turnover</p>
+                        <p class="font-semibold text-gray-800" id="summaryTurnover">€450,000</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                        <div class="text-sm text-blue-800">
+                            <p class="font-medium mb-1">Disclaimer</p>
+                            <p>This is an indicative valuation based on market data from Brookz and Rabobank. For an accurate appraisal, we recommend contacting us for a personal consultation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="downloadPDF()" class="flex-1 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-file-pdf"></i>
+                        Download PDF Report
+                    </button>
+                    <button onclick="bookCall()" class="flex-1 px-6 py-3 border-2 border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-phone"></i>
+                        Schedule a Call
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 fade-in">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Next Steps</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-teal-600 font-semibold text-sm">1</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">PDF Report via Email</p>
+                            <p class="text-sm text-gray-600">You'll receive the detailed valuation in your inbox.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-teal-600 font-semibold text-sm">2</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Free Consultation Call</p>
+                            <p class="text-sm text-gray-600">Our expert will contact you within 2 business days.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-teal-600 font-semibold text-sm">3</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Detailed Appraisal</p>
+                            <p class="text-sm text-gray-600">Based on your specific situation and requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-5xl mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-tooth text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold">ITMC SYSTEMS</p>
+                        <p class="text-sm text-gray-400">Dental Practice Specialists</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <a href="#" class="text-gray-400 hover:text-white transition">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Contact</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-sm text-gray-400">
+                © 2026 ITMC SYSTEMS - All Rights Reserved
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hidden transform transition-all duration-300 translate-y-full opacity-0">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-green-400"></i>
+            <span id="toastMessage">Progress saved!</span>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 6;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            updateRevenueTotal();
+            updateProgressIndicators();
+        });
+        
+        // Step navigation
+        function changeStep(direction) {
+            if (direction === 1 && !validateStep(currentStep)) {
+                return;
+            }
+            
+            const newStep = currentStep + direction;
+            if (newStep < 1 || newStep > totalSteps) return;
+            
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('step-hidden');
+            document.querySelector(`.form-step[data-step="${newStep}"]`).classList.remove('step-hidden');
+            
+            currentStep = newStep;
+            updateProgressBar();
+            updateButtons();
+            updateProgressIndicators();
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function validateStep(step) {
+            const stepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+            const requiredFields = stepEl.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value || (field.type === 'radio' && !document.querySelector(`input[name="${field.name}"]:checked`))) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Please fill in all required fields', 'error');
+            }
+            
+            return isValid;
+        }
+        
+        function updateProgressBar() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('currentStepNum').textContent = currentStep;
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+        }
+        
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.classList.toggle('hidden', currentStep === 1);
+            nextBtn.classList.toggle('hidden', currentStep === totalSteps);
+            submitBtn.classList.toggle('hidden', currentStep !== totalSteps);
+        }
+        
+        function updateProgressIndicators() {
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                if (stepNum === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+        
+        // Form submission
+        document.getElementById('valuationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateStep(currentStep)) return;
+            if (!document.getElementById('captchaCheck').checked) {
+                showToast('Please confirm that you are not a robot', 'error');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('valuationForm').classList.add('hidden');
+            document.getElementById('progressContainer').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            
+            // Simulate calculation
+            setTimeout(() => {
+                calculateValuation();
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('resultsSection').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 2500);
+        });
+        
+        // Valuation calculation
+        function calculateValuation() {
+            const formData = new FormData(document.getElementById('valuationForm'));
+            
+            // Get turnover
+            const turnoverStr = formData.get('annualTurnover') || '0';
+            const turnover = parseInt(turnoverStr.replace(/[,.]/g, '')) || 400000;
+            
+            // Get factors
+            const patients = parseInt(formData.get('registeredPatients')) || 2500;
+            const chairs = parseInt(formData.get('treatmentChairs')) || 3;
+            const locations = parseInt(formData.get('locations')) || 1;
+            
+            // Get specialties count
+            const specialties = document.querySelectorAll('input[name="specialties"]:checked').length;
+            
+            // Calculate multiplier (0.9 - 1.2 base)
+            let baseMultiplier = 1.0;
+            
+            // Adjust for patients
+            if (patients > 4000) baseMultiplier += 0.1;
+            else if (patients < 2000) baseMultiplier -= 0.05;
+            
+            // Adjust for chairs
+            if (chairs >= 4) baseMultiplier += 0.05;
+            
+            // Adjust for locations
+            if (locations >= 2) baseMultiplier += 0.05;
+            
+            // Adjust for specialties
+            if (specialties >= 3) baseMultiplier += 0.1;
+            
+            // Calculate range
+            const lowMultiplier = Math.max(0.85, baseMultiplier - 0.15);
+            const highMultiplier = Math.min(1.3, baseMultiplier + 0.15);
+            
+            const lowValue = Math.round(turnover * lowMultiplier / 10000) * 10000;
+            const highValue = Math.round(turnover * highMultiplier / 10000) * 10000;
+            
+            // Update display
+            document.getElementById('valuationResult').textContent = 
+                `€${lowValue.toLocaleString('en-US')} – €${highValue.toLocaleString('en-US')}`;
+            
+            document.getElementById('summaryPatients').textContent = 
+                patients >= 4000 ? '4,000+' : patients.toLocaleString('en-US') + '+';
+            document.getElementById('summaryChairs').textContent = chairs;
+            document.getElementById('summaryTurnover').textContent = 
+                '€' + turnover.toLocaleString('en-US');
+            
+            // Store for PDF
+            window.valuationData = {
+                lowValue,
+                highValue,
+                turnover,
+                patients,
+                chairs,
+                formData: Object.fromEntries(formData)
+            };
+        }
+        
+        // Currency formatting
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value) {
+                value = parseInt(value).toLocaleString('en-US');
+            }
+            input.value = value;
+        }
+        
+        // Revenue sliders
+        function updateRevenueSlider(slider, type) {
+            document.getElementById(`rev_${type}_val`).textContent = slider.value + '%';
+            updateRevenueTotal();
+        }
+        
+        function updateRevenueTotal() {
+            const sliders = ['general', 'ortho', 'implant', 'paro', 'pediatric', 'other'];
+            let total = 0;
+            sliders.forEach(type => {
+                const slider = document.querySelector(`input[name="rev_${type}"]`);
+                if (slider) total += parseInt(slider.value);
+            });
+            
+            const totalEl = document.getElementById('revenueTotal');
+            totalEl.textContent = total + '%';
+            totalEl.className = total === 100 ? 'ml-2 text-sm font-semibold text-green-600' : 
+                                total > 100 ? 'ml-2 text-sm font-semibold text-red-600' : 
+                                'ml-2 text-sm font-semibold text-orange-500';
+        }
+        
+        // Property toggle
+        function togglePropertyDetails(status) {
+            document.getElementById('rentedDetails').classList.toggle('hidden', status !== 'rented');
+            document.getElementById('ownedDetails').classList.toggle('hidden', status !== 'owned');
+        }
+        
+        // Other toggles
+        function toggleOtherSpecialty(checkbox) {
+            document.getElementById('otherSpecialtyInput').classList.toggle('hidden', !checkbox.checked);
+        }
+        
+        function toggleInvestmentDetails(show) {
+            document.getElementById('investmentDetails').classList.toggle('hidden', !show);
+        }
+        
+        function toggleChainDetails(show) {
+            document.getElementById('chainDetails').classList.toggle('hidden', !show);
+        }
+        
+        // Save/Load progress
+        function saveProgress() {
+            const formData = new FormData(document.getElementById('valuationForm'));
+            const data = {
+                step: currentStep,
+                fields: Object.fromEntries(formData)
+            };
+            localStorage.setItem('dentalValuation', JSON.stringify(data));
+            showToast('Progress saved!');
+        }
+        
+        function loadProgress() {
+            const saved = localStorage.getItem('dentalValuation');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    
+                    // Restore form fields
+                    Object.entries(data.fields).forEach(([name, value]) => {
+                        const field = document.querySelector(`[name="${name}"]`);
+                        if (field) {
+                            if (field.type === 'checkbox') {
+                                field.checked = value === 'on';
+                            } else if (field.type === 'radio') {
+                                const radio = document.querySelector(`[name="${name}"][value="${value}"]`);
+                                if (radio) radio.checked = true;
+                            } else {
+                                field.value = value;
+                            }
+                        }
+                    });
+                    
+                    // Go to saved step
+                    if (data.step > 1) {
+                        for (let i = 1; i < data.step; i++) {
+                            document.querySelector(`.form-step[data-step="${i}"]`).classList.add('step-hidden');
+                        }
+                        document.querySelector(`.form-step[data-step="${data.step}"]`).classList.remove('step-hidden');
+                        currentStep = data.step;
+                        updateProgressBar();
+                        updateButtons();
+                    }
+                    
+                    showToast('Previous progress restored');
+                } catch (e) {
+                    console.error('Error loading progress:', e);
+                }
+            }
+        }
+        
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            
+            document.getElementById('toastMessage').textContent = message;
+            icon.className = type === 'error' ? 'fas fa-exclamation-circle text-red-400' : 'fas fa-check-circle text-green-400';
+            
+            toast.classList.remove('hidden', 'translate-y-full', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-full', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
+        }
+        
+        // PDF download (simulated)
+        function downloadPDF() {
+            showToast('PDF is being generated and downloaded...');
+            
+            // In production, this would call a backend API to generate the PDF
+            setTimeout(() => {
+                // Create a simple text representation
+                const content = `
+DENTAL PRACTICE VALUATION REPORT
+================================
+Depraktijkmakelaar.nl
+
+Indicative Value: ${document.getElementById('valuationResult').textContent}
+
+SUMMARY
+- Patients: ${document.getElementById('summaryPatients').textContent}
+- Chairs: ${document.getElementById('summaryChairs').textContent}
+- Annual Turnover: ${document.getElementById('summaryTurnover').textContent}
+
+DISCLAIMER
+This is an indicative valuation based on market data.
+For an accurate appraisal, we recommend contacting us for a consultation.
+
+© 2026 Depraktijkmakelaar.nl
+                `;
+                
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Dental-Practice-Valuation.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showToast('PDF downloaded!');
+            }, 1500);
+        }
+        
+        // Book call
+        function bookCall() {
+            showToast('Redirecting to calendar...');
+            // In production, this would redirect to a booking system
+        }
+    </script>
+</body>
+</html>
